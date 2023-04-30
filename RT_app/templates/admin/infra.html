@@ -1,0 +1,36 @@
+{% extends "dashboard.html" %}
+
+{% block content %}
+
+<div class="mt-4 ms-5">
+    <div class="row row-cols-lg-auto pe-4 align-items-center justify-content-between">
+        <h1>Infrastructures</h1>
+        <div>
+            <a class="btn btn-secondary" href="#" >Ajouter</a>
+            <a class="btn btn-secondary" href="#" >Supprimer</a>
+        </div>
+    </div>
+
+        <div class="row gap-3 justify-content-evenly">
+            {% for infrastructure in infrastructures %}
+            <div class="card mt-2 col-4">
+                <div class="card-body">
+                    <div class="card-title">Infrastructure: {{infrastructure.nom}}</div>
+                    <div class="row">
+                        {% for machine in infrastructure.machine_set.all %}
+                        <div class="p-3 col-6">
+                        <div class="card-body bg-info-subtle rounded-3">
+                            <div class="card-text w-auto">Machine: {{machine.nom}}</div>
+                            <div class="card-text w-auto">IP: {{machine.ip}}</div>
+                        </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+</div>
+
+{% endblock %}
