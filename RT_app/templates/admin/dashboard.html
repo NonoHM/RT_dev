@@ -56,28 +56,33 @@
         <div class="row mt-4 ms-5">
             <h1>Dashboard</h1>
             <div class="col-6">
-                <h2>Infrastructures</h2>
-                <p>Nombre d'infrastructures: {{infrastructures.all.count}}</p>
-                <p>Nombre de machines: {{machines.all.count}}</p>
-                <div class="row gap-3 justify-content-evenly">
-                    {% for infrastructure in infrastructures %}
-                    <div class="card mt-2 col-4">
-                        <div class="card-body">
-                            <div class="card-title">Infrastructure: {{infrastructure.nom}}</div>
-                            <div class="card-text">Nombre de machines: {{infrastructure.machine_set.count}}</div>
+                <div class="card mt-2 col">
+                    <div class="card-body row">
+                        <h2 class="card-title">Infrastructures</h2>
+                        <p class="card-header">Nombre d'infrastructures: {{infrastructures.all.count}}</p>
+                        <p class="card-header">Nombre de machines: {{machines.all.count}}</p>
+                        <div class="row gap-3 justify-content-evenly">
+                            {% for infrastructure in infrastructures %}
+                            <div class="card mt-2 col-4">
+                                <div class="card-body">
+                                    <div class="card-title">Infrastructure: {{infrastructure.nom}}</div>
+                                    <div class="card-text">Nombre de machines: {{infrastructure.machine_set.count}}</div>
+                                </div>
+                            </div>
+                            {% endfor %}
                         </div>
                     </div>
-                    {% endfor %}
                 </div>
             </div>
             <div class="col-6">
-                <h2>Tâches</h2>
-                <p>Nombre de tâches à effectuer: {{entretiens.all.count}}</p>
-                    <div class="card mt-2 col-4">
+                    <div class="card mt-2 col">
                         <div class="card-body row">
-                            <div class="card-title col-12">Tâches à effectuer: </div>
-                            <div class="card-text w-50">MAJ: </div>
-                            <div class="card-text w-50">Entretien Matériel: </div>
+                            <h2 class="card-title">Tâches</h2>
+                            <p class="card-header">Nombre de tâches à effectuer: {{entretien_a_faire.count}}</p>
+                            
+                            {% for entretien in entretien_par_type %}
+                                <div class="card-text w-50">{{ entretien.type }}: {{ entretien.count }}</div>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>

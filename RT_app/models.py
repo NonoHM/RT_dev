@@ -4,8 +4,6 @@ from django.core.validators import RegexValidator
 
 # Create your models here.
 
-
-
 class personnel(models.Model):
 
     id = models.AutoField(primary_key=True,editable=False)
@@ -70,7 +68,7 @@ class entretien(models.Model):
 
     id_machine  = models.ForeignKey(machine, on_delete=models.CASCADE)
 
-    fait = models.BooleanField(default=False)
+    etat = models.BooleanField(default=False)
 
     def __str__ (self):
         return str(self.id) + " -> " + self.type
