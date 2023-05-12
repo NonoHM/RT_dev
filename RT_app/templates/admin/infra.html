@@ -6,31 +6,94 @@
     <div class="row row-cols-lg-auto pe-4 align-items-center justify-content-between">
         <h1>Infrastructures</h1>
         <div>
-            <a class="btn btn-secondary" href="#" >Ajouter</a>
-            <a class="btn btn-secondary" href="#" >Supprimer</a>
+            <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#AddInfra" href="#">Ajouter</a>
+            <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#DeleteInfra" href="#" >Supprimer</a>
         </div>
     </div>
 
         <div class="row gap-3 justify-content-evenly">
-            {% for infrastructure in infrastructures %}
-            <div class="card mt-2 col-4">
-                <div class="card-body">
-                    <div class="card-title">Infrastructure: {{infrastructure.nom}}</div>
-                    <div class="row">
-                        {% for machine in infrastructure.machine_set.all %}
-                        <div class="p-3 col-6">
-                        <div class="card-body bg-info-subtle rounded-3">
-                            <div class="card-text w-auto">Machine: {{machine.nom}}</div>
-                            <div class="card-text w-auto">IP: {{machine.ip}}</div>
+            {% if submitted_add %}
+                <div class="alert alert-success me-5" role="alert">L'infrastructure a bien été ajoutée</div>
+            {% elif submitted_delete %}
+                <div class="alert alert-danger me-5" role="alert">L'infrastructure a bien été supprimée</div>
+            {% endif %}
+            {% if infrastructures %}
+                {% for infrastructure in infrastructures %}
+                <div class="card mt-2 col-4">
+                    <div class="card-body">
+                        <div class="card-title">Infrastructure: {{infrastructure.nom}}</div>
+                        <div class="row">
+                            {% for machine in infrastructure.machine_set.all %}
+                            <div class="p-3 col-6">
+                            <div class="card-body bg-info-subtle rounded-3">
+                                <div class="card-text w-auto">Machine: <a href="{% url 'machine-detail' machine.id %}">{{ machine.nom }}</a></div>
+                                <div class="card-text w-auto">IP: {{machine.ip}}</div>
+                            </div>
+                            </div>
+                            {% endfor %}
                         </div>
-                        </div>
-                        {% endfor %}
                     </div>
                 </div>
-            </div>
-            {% endfor %}
-
+                {% endfor %}
+            {% else %}
+                <div class="align-items-center justify-content-center">
+                    <p>Il n'y a pas d'infrastructure</p>
+                </div>
+            {% endif %}
         </div>
+    
+
+        <!-- Modal -->
+        <div class="modal fade" id="AddInfra" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h1 class="modal-title fs-5" id="AddInfraLabel">Ajouter une infrastructure</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body row-gap-3">
+                    <div class="mt-1 mb-3">
+                        <h3>Nom de l'infrastructure</h3>
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ addInfraForm.as_p}}
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Ajouter l'infrastructure</button>
+                </form>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <!-- Delete Infrastructure Modal -->
+    <div class="modal fade" id="DeleteInfra" tabindex="-1" aria-labelledby="deleteInfraLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="deleteInfraLabel">Supprimer l'infrastructure</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            <form method="POST">
+                {% csrf_token %}
+                {{ deleteInfraForm.as_p }}
+                <input type="submit" value="Supprimer" class="btn btn-danger">
+            </form>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+        </div>
+    </div>
+  
+
+
 </div>
+
 
 {% endblock %}

@@ -4,7 +4,7 @@ from django.core.validators import RegexValidator
 
 # Create your models here.
 
-class personnel(models.Model):
+class Personnel(models.Model):
 
     id = models.AutoField(primary_key=True,editable=False)
 
@@ -15,7 +15,15 @@ class personnel(models.Model):
     def __str__ (self):
         return str(self.id) + " -> " + self.login
 
-class machine(models.Model):
+class Machine(models.Model):
+
+    TYPE = (
+        ('PC', 'PC - OS windows'),
+        ('Mac', ('Mac - OS MacOS')),
+        ('Serveur', ('Serveur - OS Debian')),
+        ('Autre', ('Autre type de machine')),
+    )
+
     id = models.AutoField(primary_key=True,editable=False)
 
     nom = models.CharField(max_length=15, default="PC")
@@ -24,29 +32,31 @@ class machine(models.Model):
 
     etat = models.BooleanField(default=True)
 
-    id_infrastructure = models.ForeignKey('infrastructure', on_delete=models.CASCADE)
+    id_infrastructure = models.ForeignKey('Infrastructure', on_delete=models.CASCADE)
+
+    type_machine = models.CharField(max_length=32, choices=TYPE, default='PC')
 
     def __str__ (self):
         return str(self.id) + " -> " + self.ip
 
 
-class infrastructure(models.Model):
+class Infrastructure(models.Model):
     id = models.AutoField(primary_key=True,editable=False)
 
     nom = models.CharField(max_length=20)
 
-    id_personnel = models.ForeignKey(personnel, on_delete=models.CASCADE)
+    id_personnel = models.ForeignKey(Personnel, on_delete=models.CASCADE)
 
     pays = models.CharField(max_length=30)
 
     ville = models.CharField(max_length=64)
 
-    coordonnees = models.CharField(max_length=18, validators=[RegexValidator(r'^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)\s*[-+]?([1-9]?\d(\.\d+)?|1[0-7]\d(\.\d+)?|180(\.0+)?)$')])  
+    coordonnees = models.CharField(null=True, blank=True ,max_length=18, validators=[RegexValidator(r'^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)\s*[-+]?([1-9]?\d(\.\d+)?|1[0-7]\d(\.\d+)?|180(\.0+)?)$')])  
     
     def __str__ (self):
         return str(self.id) + " -> " + self.nom
 
-class entretien(models.Model):
+class Entretien(models.Model):
     TYPE_CHOICES = [
         ('PREVENTIF', 'Préventif'),
         ('CORRECTIF', 'Correctif'),
@@ -64,15 +74,19 @@ class entretien(models.Model):
 
     date = models.DateField(default=datetime.now())
 
-    id_personnel = models.ForeignKey(personnel, on_delete=models.CASCADE)
+    id_personnel = models.ForeignKey(Personnel, on_delete=models.CASCADE)
 
-    id_machine  = models.ForeignKey(machine, on_delete=models.CASCADE)
+    id_machine  = models.ForeignKey(Machine, on_delete=models.CASCADE)
 
     etat = models.BooleanField(default=False)
 
     def __str__ (self):
         return str(self.id) + " -> " + self.type
 
+class Entretien_detail(models.Model):
+    id_machine = models.ForeignKey(Machine, on_delete=models.CASCADE)
 
+    id_entretien = models.ForeignKey(Entretien, on_delete=models.CASCADE)
 
-
+    def __str__(self) -> str:
+        return str(self.id_machine) + " -> " + str(self.id_entretien)

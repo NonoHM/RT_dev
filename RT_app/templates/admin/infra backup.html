@@ -1,0 +1,160 @@
+{% extends "dashboard.html" %}
+
+{% block content %}
+
+<div class="mt-4 ms-5">
+    <div class="row row-cols-lg-auto pe-4 align-items-center justify-content-between">
+        <h1>Infrastructures</h1>
+        <div>
+            <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#AddInfra" href="#">Ajouter</a>
+            <a class="btn btn-secondary" href="#" >Supprimer</a>
+        </div>
+    </div>
+
+        <div class="row gap-3 justify-content-evenly">
+            {% if infrastructures %}
+                {% for infrastructure in infrastructures %}
+                <div class="card mt-2 col-4">
+                    <div class="card-body">
+                        <div class="card-title">Infrastructure: {{infrastructure.nom}}</div>
+                        <div class="row">
+                            {% for machine in infrastructure.machine_set.all %}
+                            <div class="p-3 col-6">
+                            <div class="card-body bg-info-subtle rounded-3">
+                                <div class="card-text w-auto">Machine: <a href="{% url 'machine-detail' machine.id %}">{{ machine.nom }}</a></div>
+                                <div class="card-text w-auto">IP: {{machine.ip}}</div>
+                            </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="align-items-center justify-content-center">
+                    <p>Il n'y a pas d'infrastructure</p>
+                </div>
+            {% endif %}
+        </div>
+    
+  
+        <!-- Modal -->
+        <div class="modal fade" id="AddInfra" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Ajouter une infrastructure</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body row-gap-3">
+                    <div class="mt-1 mb-3">
+                        <h3>Nom de l'infrastructure</h3>
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ addInfraForm.nom_infra }}
+                            <input type="submit" value="Submit">
+                            {% if addInfraForm.nom_infra.errors %}
+                                <div class="alert alert-danger">
+                                    {% for error in addInfraForm.nom_infra.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </form>
+                    </div>
+                    <div class="my-3">
+                        <h3>Responsable de l'infrastructure</h3>
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ addInfraForm.id_personnel_infra }}
+                            <input type="submit" value="Submit">
+                            {% if addInfraForm.id_personnel_infra.errors %}
+                                <div class="alert alert-danger">
+                                    {% for error in addInfraForm.id_personnel_infra.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </form>
+                    </div>
+                    
+                    <div class="my-3">
+                        <h3>Pays de l'infra</h3>
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ addInfraForm.pays_infra }}
+                            <input type="submit" value="Submit">
+                            {% if addInfraForm.pays_infra.errors %}
+                                <div class="alert alert-danger">
+                                    {% for error in addInfraForm.pays_infra.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </form>
+                    </div>
+                    <div class="my-3">
+                        <h3>Ville de l'infra</h3>
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ addInfraForm.ville_infra }}
+                            <input type="submit" value="Submit">
+                            {% if addInfraForm.ville_infra.errors %}
+                                <div class="alert alert-danger">
+                                    {% for error in addInfraForm.ville_infra.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </form>
+                    </div>
+                    <div class="my-3">
+                        <h3>Coordonnées de l'infra</h3>
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ addInfraForm.coordonnees_infra }}
+                            <input type="submit" value="Submit">
+                            {% if addInfraForm.coordonnees_infra.errors %}
+                                <div class="alert alert-danger">
+                                    {% for error in addInfraForm.coordonnees_infra.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-primary" id="add-infra-btn">Ajouter l'infrastructure</button>
+                </div>
+            </div>
+            </div>
+        </div>
+</div>
+<!--
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+    $(function() {
+      $('#add-infra-btn').click(function() {
+        $.ajax({
+          url: '{% url "add-infra" %}',
+          type: 'post',
+          data: $('form').serialize(),
+          success: function(response) {
+            // Handle successful submission here
+            alert('Infrastructure ajoutée avec succès!');
+          },
+          error: function(xhr, status, error) {
+            // Handle errors here
+            alert('Une erreur s\'est produite: ' + error);
+          }
+        });
+      });
+    });
+</script>
+-->
+
+    
+
+{% endblock %}

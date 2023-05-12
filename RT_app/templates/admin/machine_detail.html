@@ -1,0 +1,39 @@
+{% extends "dashboard.html" %}
+
+{% block content %}
+
+{% load static %}
+
+<div class="mt-4 ms-5">
+    <div class="row row-cols-lg-auto pe-4 align-items-center justify-content-between">
+        <h1>Détail de la machine {{machine.nom}}</h1>
+    </div>
+
+        <div class="row gap-3 justify-content-evenly">
+            <div class="card border-info mt-2 col-auto">
+                <div class="card-body">
+                    {% if machine.type_machine == 'PC' %}
+                        <div class="card-img-top m-1"><img src="{% static 'img/pc.png' %}" class="img-fluid mx-auto d-block" style="width: 100px;" alt="PC"></div>
+                    {% elif machine.type_machine == 'Mac' %}
+                        <div class="card-img-top m-1"><img src="{% static 'img/mac.png' %}" class="img-fluid mx-auto d-block" style="width: 100px;" alt="Mac"></div>
+                    {% elif machine.type_machine == 'Serveur' %}
+                        <div class="card-img-top m-1"><img src="{% static 'img/serveur.png' %}" class="img-fluid mx-auto d-block" style="width: 100px;" alt="Serveur"></div>
+                    {% elif machine.type_machine == 'Autre' %}
+                        <div class="card-img-top m-1"><img src="{% static 'img/autre.png' %}" class="img-fluid mx-auto d-block" style="width: 100px;" alt="Autre"></div>
+                    {% endif %}
+
+                    <div class="card-title">Infrastructure: {{infrastructure.nom}}</div>
+                    <div class="card-text">Nom: {{ machine.nom }}</div>
+                    <div class="card-text">Id: {{ machine.id }}</div>
+                    <div class="card-text">Type de machine: {{ machine.type_machine }}</div>
+                    <form method="POST" action="{% url 'machine-delete' machine.id %}">
+                        {% csrf_token %}
+                        <button class="btn btn-danger" type="submit">Supprimer la machine</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+</div>
+
+{% endblock %}

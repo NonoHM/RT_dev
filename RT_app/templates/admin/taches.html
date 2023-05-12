@@ -1,0 +1,82 @@
+{% extends "dashboard.html" %}
+
+{% block content %}
+
+<div class="mt-4 ms-5">
+    <div class="row row-cols-lg-auto pe-4 align-items-center justify-content-between">
+        <h1>Entretiens</h1>
+        <div>
+            <a class="btn btn-success" data-bs-target="#AddEntretien" href="#" >Ajouter</a>
+            <a class="btn btn-danger" href="#" >Supprimer</a>
+        </div>
+    </div>
+
+    <div class="row gap-3 justify-content-evenly">
+        {% for entretien_type in machines_entretien %}
+        <div class="card mt-2 col-4">
+            <div class="card-body">
+                <div class="card-title">Tâche: {{entretien_type.type}}</div>
+                {% for machine in entretien_type.machines %}
+                <div class="p-3 col-6">
+                    <div class="card-body bg-info-subtle rounded-3">
+                        <div class="card-text w-auto">Machine: {{machine.nom}}</div>
+                        <div class="card-text w-auto">IP: {{machine.ip}}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+            <!-- Add Task Modal -->
+            <div class="modal fade" id="AddEntretien" tabindex="-1" aria-labelledby="AddEntretienLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="AddEntretienLabel">Ajouter une tâche</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body row-gap-3">
+                        <div class="mt-1 mb-3">
+                            <h3>Nom de la tâche</h3>
+                            <form method="post">
+                                {% csrf_token %}
+                                {{ addEntretienForm.as_p}}
+    
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Ajouter l'infrastructure</button>
+                    </form>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+    
+            <!-- Delete Task Modal -->
+        <div class="modal fade" id="DeleteInfra" tabindex="-1" aria-labelledby="deleteInfraLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="deleteInfraLabel">Supprimer l'infrastructure</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ deleteInfraForm.as_p }}
+                    <input type="submit" value="Supprimer" class="btn btn-danger">
+                </form>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                </div>
+            </div>
+            </div>
+        </div>
+
+</div>
+
+{% endblock %}

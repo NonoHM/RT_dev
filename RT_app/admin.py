@@ -1,8 +1,8 @@
 from django.contrib import admin
-from .models import machine, entretien, personnel,infrastructure
+from .models import Machine, Entretien, Personnel,Infrastructure
 # Register your models here.
 
-admin.site.register(machine)
-admin.site.register(entretien)
-admin.site.register(personnel)
-admin.site.register(infrastructure)
+admin.site.register(Machine)
+admin.site.register(Entretien)
+admin.site.register(Personnel)
+admin.site.register(Infrastructure)
