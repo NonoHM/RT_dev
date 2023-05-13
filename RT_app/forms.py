@@ -1,6 +1,6 @@
 from django import forms 
 from django.core.exceptions import ValidationError
-from .models import Personnel,Infrastructure, Entretien
+from .models import Personnel, Infrastructure, Entretien, Entretien_detail
 from django.core.validators import RegexValidator
 
 
@@ -49,12 +49,11 @@ class DeleteInfraForm(forms.ModelForm):
 
 
 class AddEntretienForm(forms.ModelForm):
-    add_tache_form = forms.CharField(widget=forms.HiddenInput(), initial='add_tache_form')
+    add_entretien_form = forms.CharField(widget=forms.HiddenInput(), initial='add_entretien_form')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-
     class Meta:
         model = Entretien
         fields = [ 'type', 'description', 'date', 'id_personnel','id_machine']
@@ -65,10 +64,51 @@ class AddEntretienForm(forms.ModelForm):
         widgets = {
             'type': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Type de l\'entretien'}),
             'description': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Que faire ?'}),
-            'date': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Date limite de l\'entretien'}),
+            'date': forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'Date limite de l\'entretien'}),
             'id_personnel': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Personnel responsable de l\'entretien'}),
             'id_machine': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Machine sur laquelle faire la tâche'})
         }
 
+# class DeleteEntretienForm(forms.ModelForm):
+#     delete_entretien_form = forms.CharField(widget=forms.HiddenInput(), initial='delete_entretien_form')
 
+#     entretien_choices = [(entretien.nom, entretien.nom) for entretien in Entretien.objects.all()]
+#     nom = forms.ChoiceField(choices=entretien_choices, widget=forms.Select(attrs={'class': 'form-control'}))
+
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+
+#     class Meta:
+#         model = Entretien 
+#         fields = ['nom']  
+#         labels = {
+#             'nom': 'Nom de l\'entretien'
+#         }
+#         widgets = {
+#             'nom': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Nom de l\'entretien'}),
+#         }
+
+class DeleteEntretienForm(forms.ModelForm):
+    confirm = forms.BooleanField(required=True, initial=False, label='Confirmer')
+    delete_entretien_form = forms.CharField(widget=forms.HiddenInput(), initial='delete_entretien_form')
+    entretien_choices = [(entretien.id, entretien.get_name()) for entretien in Entretien.objects.all().filter(etat=True)]
+    nom = forms.ChoiceField(choices=entretien_choices, widget=forms.Select(attrs={'class': 'form-control'}), label='Nom de l\'entretien')
+
+    class Meta:
+        model = Entretien 
+        fields = ['nom']
+        widgets = {
+             'nom': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Nom de l\'entretien'}),
+        }
+
+        def clean(self):
+            cleaned_data = super().clean()
+            clean_name = cleaned_data.get('name')
+            confirm = cleaned_data.get('confirm')
+
+            if not Entretien.objects.filter(name=clean_name).exists():
+                raise forms.ValidationError("Cet entretien n'existe pas")
+            
+            if not confirm:
+                raise forms.ValidationError('Vous devez confirmer la suppression de cet entretien.')
 

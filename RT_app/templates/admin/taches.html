@@ -6,12 +6,18 @@
     <div class="row row-cols-lg-auto pe-4 align-items-center justify-content-between">
         <h1>Entretiens</h1>
         <div>
-            <a class="btn btn-success" data-bs-target="#AddEntretien" href="#" >Ajouter</a>
-            <a class="btn btn-danger" href="#" >Supprimer</a>
+            <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#AddEntretien" href="#" >Ajouter</a>
+            <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#DeleteEntretien" href="#" >Supprimer</a>
+            <a class="btn btn-secondary" href="#" >Historique</a>
         </div>
     </div>
 
     <div class="row gap-3 justify-content-evenly">
+        {% if submitted_add %}
+                <div class="alert alert-success me-5" role="alert">L'entretien a bien été ajouté</div>
+        {% elif submitted_delete %}
+                <div class="alert alert-danger me-5" role="alert">L'entretien a bien été supprimé</div>
+        {% endif %}
         {% for entretien_type in machines_entretien %}
         <div class="card mt-2 col-4">
             <div class="card-body">
@@ -34,7 +40,7 @@
                 <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="AddEntretienLabel">Ajouter une tâche</h1>
+                    <h1 class="modal-title fs-5" id="AddEntretienLabel">Ajouter un entretien</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body row-gap-3">
@@ -47,7 +53,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Ajouter l'infrastructure</button>
+                    <button type="submit" class="btn btn-primary">Ajouter l'entretien</button>
                     </form>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                     </div>
@@ -56,17 +62,17 @@
             </div>
     
             <!-- Delete Task Modal -->
-        <div class="modal fade" id="DeleteInfra" tabindex="-1" aria-labelledby="deleteInfraLabel" aria-hidden="true">
+        <div class="modal fade" id="DeleteEntretien" tabindex="-1" aria-labelledby="DeleteEntretienLabel" aria-hidden="true">
             <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                <h5 class="modal-title" id="deleteInfraLabel">Supprimer l'infrastructure</h5>
+                <h5 class="modal-title" id="DeleteEntretienLabel">Supprimer l'entretien</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                 <form method="POST">
                     {% csrf_token %}
-                    {{ deleteInfraForm.as_p }}
+                    {{ deleteEntretienForm.as_p }}
                     <input type="submit" value="Supprimer" class="btn btn-danger">
                 </form>
                 </div>

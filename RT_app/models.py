@@ -68,11 +68,13 @@ class Entretien(models.Model):
 
     id = models.AutoField(primary_key=True,editable=False)
 
+    nom = models.CharField(max_length=30, default="Mise à jour")
+
     type = models.CharField(max_length=15, choices=TYPE_CHOICES, default='PREVENTIF')
 
     description = models.TextField()
 
-    date = models.DateField(default=datetime.now())
+    date = models.DateField(default=datetime.now().strftime("%Y-%m-%d"))
 
     id_personnel = models.ForeignKey(Personnel, on_delete=models.CASCADE)
 
@@ -81,7 +83,10 @@ class Entretien(models.Model):
     etat = models.BooleanField(default=False)
 
     def __str__ (self):
-        return str(self.id) + " -> " + self.type
+        return f"{str(self.id)} -> {self.nom} ({self.type})"
+    
+    def get_name (self):
+        return f"{self.nom} ({self.type})"
 
 class Entretien_detail(models.Model):
     id_machine = models.ForeignKey(Machine, on_delete=models.CASCADE)
