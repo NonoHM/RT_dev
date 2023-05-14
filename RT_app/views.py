@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from RT_app.models import Machine, Entretien, Personnel, Infrastructure
 from django.db.models import Count
-from .forms import AddInfraForm, DeleteInfraForm, AddEntretienForm, DeleteEntretienForm
+from .forms import AddInfraForm, DeleteInfraForm, AddEntretienForm, DeleteEntretienForm, AddMachineForm
 from django.contrib import messages
 from django.urls import reverse
 from django.http import HttpResponseRedirect
@@ -42,8 +42,10 @@ def infra(request):
     infrastructures = Infrastructure.objects.all()
     addInfraForm = AddInfraForm()
     deleteInfraForm = DeleteInfraForm()
+    addMachineForm = AddMachineForm()
     submitted_add = False
     submitted_delete = False
+    submitted_add_machine = False
 
     if request.method == 'POST':
         if 'add_infra_form' in request.POST:
@@ -59,13 +61,21 @@ def infra(request):
                 infrastructure.delete()
                 submitted_delete = True
                 deleteInfraForm = DeleteInfraForm()
+        elif 'add_machine_form' in request.POST:
+            addMachineForm = AddMachineForm(request.POST)
+            if addMachineForm.is_valid():
+                addMachineForm.save()
+                submitted_add_machine = True
+                addMachineForm = AddMachineForm()
 
     context = {
         'infrastructures': infrastructures,
         'addInfraForm': addInfraForm,
         'deleteInfraForm': deleteInfraForm,
+        'addMachineForm': addMachineForm,
         'submitted_add': submitted_add,
         'submitted_delete': submitted_delete,
+        'submitted_add_machine': submitted_add_machine
     }
     return render(request, 'admin/infra.html', context)
 
@@ -139,4 +149,13 @@ def taches(request):
     }
 
     return render(request, 'admin/taches.html', context)
+
+
+def taches_historique(request):
+ 
+    context = {
+        'entretiens' : entretiens,
+    }
+
+    return render(request, 'admin/taches_histo.html', context)
 

@@ -1,6 +1,6 @@
 from django import forms 
 from django.core.exceptions import ValidationError
-from .models import Personnel, Infrastructure, Entretien, Entretien_detail
+from .models import Personnel, Infrastructure, Entretien, Machine
 from django.core.validators import RegexValidator
 
 
@@ -56,37 +56,20 @@ class AddEntretienForm(forms.ModelForm):
         
     class Meta:
         model = Entretien
-        fields = [ 'type', 'description', 'date', 'id_personnel','id_machine']
+        fields = [ 'type','nom', 'description', 'date', 'id_personnel','id_machine']
         labels = {
+            'date': 'Date de fin',
             'id_personnel': 'Personnel attitré',
             'id_machine': 'Machine atitrée'
         }
         widgets = {
             'type': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Type de l\'entretien'}),
-            'description': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Que faire ?'}),
+            'nom': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom de l\'entretien'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Que faire ?'}),
             'date': forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'Date limite de l\'entretien'}),
             'id_personnel': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Personnel responsable de l\'entretien'}),
             'id_machine': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Machine sur laquelle faire la tâche'})
         }
-
-# class DeleteEntretienForm(forms.ModelForm):
-#     delete_entretien_form = forms.CharField(widget=forms.HiddenInput(), initial='delete_entretien_form')
-
-#     entretien_choices = [(entretien.nom, entretien.nom) for entretien in Entretien.objects.all()]
-#     nom = forms.ChoiceField(choices=entretien_choices, widget=forms.Select(attrs={'class': 'form-control'}))
-
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-
-#     class Meta:
-#         model = Entretien 
-#         fields = ['nom']  
-#         labels = {
-#             'nom': 'Nom de l\'entretien'
-#         }
-#         widgets = {
-#             'nom': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Nom de l\'entretien'}),
-#         }
 
 class DeleteEntretienForm(forms.ModelForm):
     confirm = forms.BooleanField(required=True, initial=False, label='Confirmer')
@@ -112,3 +95,24 @@ class DeleteEntretienForm(forms.ModelForm):
             if not confirm:
                 raise forms.ValidationError('Vous devez confirmer la suppression de cet entretien.')
 
+
+class AddMachineForm(forms.ModelForm):
+    add_machine_form = forms.CharField(widget=forms.HiddenInput(), initial='add_machine_form')
+
+    class Meta:
+        model = Machine
+        fields = ['nom', 'ip', 'etat', 'id_infrastructure', 'type_machine']
+        labels = {
+            'nom': 'Nom',
+            'ip': 'Adresse IP',
+            'etat': 'État',
+            'id_infrastructure': 'Infrastructure',
+            'type_machine': 'Type de machine',
+        }
+        widgets = {
+            'nom': forms.TextInput(attrs={'class': 'form-control'}),
+            'ip': forms.TextInput(attrs={'class': 'form-control'}),
+            'etat': forms.CheckboxInput(),
+            'id_infrastructure': forms.Select(attrs={'class': 'form-control'}),
+            'type_machine': forms.Select(attrs={'class': 'form-control'}),
+        }

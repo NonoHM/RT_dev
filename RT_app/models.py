@@ -26,7 +26,7 @@ class Machine(models.Model):
 
     id = models.AutoField(primary_key=True,editable=False)
 
-    nom = models.CharField(max_length=15, default="PC")
+    nom = models.CharField(max_length=30, default="PC")
 
     ip = models.CharField(max_length=15, default="172.0.0.1", validators=[RegexValidator(r'^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$')])
 
@@ -37,13 +37,13 @@ class Machine(models.Model):
     type_machine = models.CharField(max_length=32, choices=TYPE, default='PC')
 
     def __str__ (self):
-        return str(self.id) + " -> " + self.ip
+        return f"{self.nom} -> {self.ip} ({self.id_infrastructure})"
 
 
 class Infrastructure(models.Model):
     id = models.AutoField(primary_key=True,editable=False)
 
-    nom = models.CharField(max_length=20)
+    nom = models.CharField(max_length=40)
 
     id_personnel = models.ForeignKey(Personnel, on_delete=models.CASCADE)
 
@@ -53,8 +53,15 @@ class Infrastructure(models.Model):
 
     coordonnees = models.CharField(null=True, blank=True ,max_length=18, validators=[RegexValidator(r'^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)\s*[-+]?([1-9]?\d(\.\d+)?|1[0-7]\d(\.\d+)?|180(\.0+)?)$')])  
     
+    ip_reseau = models.CharField(max_length=15, default="192.168.0.0", validators=[RegexValidator(r'^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$')])
+
+    masque = models.CharField(max_length=15, default="255.255.255.0", validators=[RegexValidator(r'^(?:128|192|224|240|248|252|254|255)\.(?:0|128|192|224|240|248|252|254|255)\.(?:0|128|192|224|240|248|252|254|255)\.(?:0|128|192|224|240|248|252|254|255)$')])
+
     def __str__ (self):
-        return str(self.id) + " -> " + self.nom
+        return f"{self.nom}"
+    
+    def get_ip(self):
+        return f"{self.ip_reseau} ({self.masque}) "
 
 class Entretien(models.Model):
     TYPE_CHOICES = [

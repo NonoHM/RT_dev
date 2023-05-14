@@ -8,6 +8,7 @@
         <div>
             <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#AddInfra" href="#">Ajouter</a>
             <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#DeleteInfra" href="#" >Supprimer</a>
+            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddMachine" href="#">Ajouter une machine</a>
         </div>
     </div>
 
@@ -16,12 +17,16 @@
                 <div class="alert alert-success me-5" role="alert">L'infrastructure a bien été ajoutée</div>
             {% elif submitted_delete %}
                 <div class="alert alert-danger me-5" role="alert">L'infrastructure a bien été supprimée</div>
+            {% elif submitted_add_machine %}
+                <div class="alert alert-success me-5" role="alert">La machine a bien été ajoutée</div>
             {% endif %}
             {% if infrastructures %}
                 {% for infrastructure in infrastructures %}
                 <div class="card mt-2 col-4">
                     <div class="card-body">
                         <div class="card-title">Infrastructure: {{infrastructure.nom}}</div>
+                        <div class="card-title">IP Réseau: {{infrastructure.ip_reseau}}</div>
+                        <div class="card-title">Masque: {{infrastructure.masque}}</div>
                         <div class="row">
                             {% for machine in infrastructure.machine_set.all %}
                             <div class="p-3 col-6">
@@ -43,7 +48,7 @@
         </div>
     
 
-        <!-- Modal -->
+        <!-- Add Infrastructure Modal -->
         <div class="modal fade" id="AddInfra" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
             <div class="modal-content">
@@ -69,7 +74,7 @@
             </div>
         </div>
 
-        <!-- Delete Infrastructure Modal -->
+    <!-- Delete Infrastructure Modal -->
     <div class="modal fade" id="DeleteInfra" tabindex="-1" aria-labelledby="deleteInfraLabel" aria-hidden="true">
         <div class="modal-dialog">
         <div class="modal-content">
@@ -91,7 +96,31 @@
         </div>
     </div>
   
+    <!-- Add Infrastructure Modal -->
+    <div class="modal fade" id="AddMachine" tabindex="-1" aria-labelledby="AddMachine" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="AddMachine">Ajouter une machine</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body row-gap-3">
+                <div class="mt-1 mb-3">
+                    <h3>Nom de la machine</h3>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ addMachineForm.as_p}}
 
+                </div>
+            </div>
+            <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Ajouter la machine</button>
+            </form>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+        </div>
+    </div>
 
 </div>
 
