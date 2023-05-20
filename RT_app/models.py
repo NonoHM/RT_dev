@@ -41,6 +41,8 @@ class Machine(models.Model):
     def __str__ (self):
         return f"{self.nom} -> {self.ip} ({self.id_infrastructure})"
 
+    def get_entretien_ids(self):
+        return [entretien.id for entretien in self.entretien_set.all()]
 
 class Infrastructure(models.Model):
     id = models.AutoField(primary_key=True,editable=False)

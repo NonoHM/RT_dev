@@ -21,9 +21,12 @@ def index(request):
     return render(request, 'index.html', context)
 
 def login_user(request):
+
+    if request.user.is_authenticated:
+        return redirect(reverse('dashboard'))
+
     if request.method == 'POST':
-        # username = request.POST["username"]
-        # password = request.POST["password"]
+
         username = request.POST.get("username")
         password = request.POST.get("password")
         user = authenticate(request, username=username, password=password)
@@ -39,12 +42,11 @@ def login_user(request):
         context = {}
         return render(request, 'login.html', context)
 
-@login_required
 def logout_user(request):
     logout(request)
     messages.success(request, "Vous avez bien été déconnecté")
     context = {}
-    return render(request, 'login.html', context)
+    return redirect(reverse("login"))
 
 # La vue dashboard affiche un tableau de bord avec des statistiques sur les machines et les entretiens
 @login_required
@@ -135,9 +137,21 @@ def taches(request):
 
     # Récupérer les machines qui nécessitent un entretien par type d'entretien
     machines_entretien = []
+    # for entretien_type in entretien_par_type:
+    #     machines = Machine.objects.filter(entretien__type=entretien_type['type'])
+    #     machines_entretien.append({'type': entretien_type['type'], 'machines': machines})
+
+
+
     for entretien_type in entretien_par_type:
         machines = Machine.objects.filter(entretien__type=entretien_type['type'])
-        machines_entretien.append({'type': entretien_type['type'], 'machines': machines})
+        machines_entretien.append({
+            'type': entretien_type['type'],
+            'machines': machines,
+            'entretien_id': [machine.get_entretien_ids() for machine in machines][0][0]
+        })
+
+
 
     # # Grouper les entretiens à faire par type et compter leur nombre
     # entretien_par_type = entretien_a_faire.values('type', 'nom', 'description').annotate(count=Count('type'))

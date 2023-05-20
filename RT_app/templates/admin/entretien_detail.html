@@ -12,9 +12,11 @@
         <div class="row gap-3 justify-content-evenly">
             <div class="card border-info mt-2 col-auto">
                 <div class="card-body">
-                    <div class="card-text">Nom: </div>
-                    <div class="card-text">Id: </div>
-                    <div class="card-text">Type de machine: </div>
+                    <div class="card-text w-auto">Type: {{ entretien.type }}</div>
+                    <div class="card-text w-auto">Description: {{ entretien.description }}</div>
+                    <div class="card-text w-auto">Date Limite: {{ entretien.date }}</div>
+                    <div class="card-text w-auto">Personnel en charge: {{ entretien.id_personnel }}</div>
+                    <div class="card-text w-auto">Machine associée: {{ entretien.id_machine }}</div>
                 </div>
             </div>
 
