@@ -50,6 +50,7 @@ class DeleteInfraForm(forms.ModelForm):
 
 class AddEntretienForm(forms.ModelForm):
     add_entretien_form = forms.CharField(widget=forms.HiddenInput(), initial='add_entretien_form')
+    etat_entretien = forms.BooleanField(widget=forms.HiddenInput(), required=True, initial=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

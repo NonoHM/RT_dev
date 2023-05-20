@@ -18,6 +18,7 @@
         {% elif submitted_delete %}
                 <div class="alert alert-danger me-5" role="alert">L'entretien a bien été supprimé</div>
         {% endif %}
+        {% if machines_entretien %}
         {% for entretien_type in machines_entretien %}
         <div class="card mt-2 col-4">
             <div class="card-body">
@@ -25,7 +26,7 @@
                 {% for machine in entretien_type.machines %}
                 <div class="p-3 col-6">
                     <div class="card-body bg-info-subtle rounded-3">
-                        <div class="card-text w-auto">Machine: {{machine.nom}}</div>
+                        <div class="card-text w-auto">Machine: <a href="#">{{ machine.nom }}</a></div>
                         <div class="card-text w-auto">IP: {{machine.ip}}</div>
                     </div>
                 </div>
@@ -34,7 +35,9 @@
         </div>
         {% endfor %}
     </div>
-    
+    {% else %}
+      <div class="alert alert-danger me-5" role="alert">Il n'y a pas eu d'entretiens</div>
+    {% endif %}
             <!-- Add Task Modal -->
             <div class="modal fade" id="AddEntretien" tabindex="-1" aria-labelledby="AddEntretienLabel" aria-hidden="true">
                 <div class="modal-dialog">

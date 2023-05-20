@@ -1,19 +1,21 @@
 from django.db import models
 from datetime import datetime
 from django.core.validators import RegexValidator
-
+from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
-class Personnel(models.Model):
+class Personnel(AbstractUser):
 
     id = models.AutoField(primary_key=True,editable=False)
 
-    login = models.CharField(max_length=20)
+    is_staff = models.BooleanField(default=False)
 
-    password = models.CharField(max_length=64, validators=[RegexValidator(r'^[a-z0-9]{64}$')], default='9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08')
+    id_infrastructure = models.ForeignKey('Infrastructure', on_delete=models.CASCADE, null=True, default=None)
 
     def __str__ (self):
-        return str(self.id) + " -> " + self.login
+        return f"{self.username} ({self.id_infrastructure})"
+
+
 
 class Machine(models.Model):
 
@@ -83,9 +85,9 @@ class Entretien(models.Model):
 
     date = models.DateField(default=datetime.now().strftime("%Y-%m-%d"))
 
-    id_personnel = models.ForeignKey(Personnel, on_delete=models.CASCADE)
+    id_personnel = models.ForeignKey('Personnel', on_delete=models.CASCADE)
 
-    id_machine  = models.ForeignKey(Machine, on_delete=models.CASCADE)
+    id_machine  = models.ForeignKey('Machine', on_delete=models.CASCADE)
 
     etat = models.BooleanField(default=False)
 

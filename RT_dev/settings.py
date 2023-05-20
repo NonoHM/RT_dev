@@ -39,8 +39,15 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django_extensions"
+    "django_extensions",
+    
 ]
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+AUTH_USER_MODEL = 'RT_app.Personnel'
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

@@ -13,13 +13,13 @@
             <div class="card border-info mt-2 col-auto">
                 <div class="card-body">
                     {% if machine.type_machine == 'PC' %}
-                        <div class="card-img-top m-1"><img src="{% static 'img/pc.png' %}" class="img-fluid mx-auto d-block" style="width: 100px;" alt="PC"></div>
+                        <div class="card-img-top m-1"><img src="{% static 'img/admin/pc.png' %}" class="img-fluid mx-auto d-block" style="width: 100px;" alt="PC"></div>
                     {% elif machine.type_machine == 'Mac' %}
-                        <div class="card-img-top m-1"><img src="{% static 'img/mac.png' %}" class="img-fluid mx-auto d-block" style="width: 100px;" alt="Mac"></div>
+                        <div class="card-img-top m-1"><img src="{% static 'img/admin/mac.png' %}" class="img-fluid mx-auto d-block" style="width: 100px;" alt="Mac"></div>
                     {% elif machine.type_machine == 'Serveur' %}
-                        <div class="card-img-top m-1"><img src="{% static 'img/serveur.png' %}" class="img-fluid mx-auto d-block" style="width: 100px;" alt="Serveur"></div>
+                        <div class="card-img-top m-1"><img src="{% static 'img/admin/serveur.png' %}" class="img-fluid mx-auto d-block" style="width: 100px;" alt="Serveur"></div>
                     {% elif machine.type_machine == 'Autre' %}
-                        <div class="card-img-top m-1"><img src="{% static 'img/autre.png' %}" class="img-fluid mx-auto d-block" style="width: 100px;" alt="Autre"></div>
+                        <div class="card-img-top m-1"><img src="{% static 'img/admin/autre.png' %}" class="img-fluid mx-auto d-block" style="width: 100px;" alt="Autre"></div>
                     {% endif %}
 
                     <div class="card-title">Infrastructure: {{infrastructure.nom}}</div>

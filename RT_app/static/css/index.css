@@ -1,0 +1,105 @@
+.footer {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
+
+.logo {
+  height: 30px; 
+  width: 8rem; 
+}
+
+/* Add the following CSS styles to your stylesheet or within <style></style> tags in the <head> section */
+
+/* Body styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Navbar styles */
+.navbar {
+  background-color: #f8f9fa; /* Set the background color */
+  border-bottom: 1px solid #dee2e6; /* Add a bottom border */
+}
+
+.navbar-brand {
+  padding: 0; /* Remove padding */
+}
+
+.navbar-brand img {
+  height: 100%; /* Adjust the height to fill the navbar */
+  object-fit: contain; /* Ensure the image maintains its aspect ratio within the navbar */
+}
+
+.navbar-nav .nav-link {
+  color: #343a40; /* Set the link color */
+}
+
+/* Banner section styles */
+.banner {
+  background-color: #f8f9fa; /* Set the background color */
+  padding: 50px 0;
+}
+
+.banner h1 {
+  font-size: 40px; /* Set the font size */
+  margin-bottom: 20px; /* Add a bottom margin */
+}
+
+.banner p {
+  margin-bottom: 20px; /* Add a bottom margin */
+}
+
+/* Services section styles */
+.services {
+  background-color: #ffffff; /* Set the background color */
+  padding: 50px 0;
+}
+
+.services h2 {
+  font-size: 30px; /* Set the font size */
+  margin-bottom: 40px; /* Add a bottom margin */
+}
+
+.card {
+  border: none; /* Remove the card border */
+  margin-bottom: 30px; /* Add a bottom margin */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+}
+
+.card-img-top {
+  height: 200px; /* Adjust the image height */
+  object-fit: cover; /* Maintain the aspect ratio */
+}
+
+.card-title {
+  font-size: 20px; /* Set the font size */
+  margin-bottom: 10px; /* Add a bottom margin */
+}
+
+.card-text {
+  font-size: 16px; /* Set the font size */
+}
+
+/* Projects section styles */
+.projects {
+  background-color: #f8f9fa; /* Set the background color */
+  padding: 50px 0;
+}
+
+.projects h2 {
+  font-size: 30px; /* Set the font size */
+  margin-bottom: 40px; /* Add a bottom margin */
+}
+
+/* Footer styles */
+.footer {
+  background-color: #f8f9fa; /* Set the background color */
+  padding: 20px 0;
+}
+
+.footer span {
+  font-size: 14px; /* Set the font size */
+}

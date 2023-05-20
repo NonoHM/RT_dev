@@ -9,7 +9,7 @@
             <a class="btn btn-secondary" href="{% url 'taches' %}" >Retour</a>
         </div>
     </div>
-
+    {% if entretiens %}
     <div class="row gap-3 justify-content-evenly">
         {% for entretien in entretiens %}
         <div class="card mt-2 col-auto me-5">
@@ -25,7 +25,9 @@
         </div>
         {% endfor %}
       </div>
-      
+      {% else %}
+      <div class="alert alert-danger me-5" role="alert">Il n'y a pas eu d'entretiens</div>
+      {% endif %}
     
     
 

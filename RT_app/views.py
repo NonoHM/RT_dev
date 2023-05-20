@@ -3,8 +3,10 @@ from RT_app.models import Machine, Entretien, Personnel, Infrastructure
 from django.db.models import Count
 from .forms import AddInfraForm, DeleteInfraForm, AddEntretienForm, DeleteEntretienForm, AddMachineForm
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.urls import reverse
-from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required, user_passes_test
+
 
 # Create your views here.
 
@@ -18,8 +20,34 @@ def index(request):
     context = {}
     return render(request, 'index.html', context)
 
+def login_user(request):
+    if request.method == 'POST':
+        # username = request.POST["username"]
+        # password = request.POST["password"]
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            # Redirect to a success page.
+            return redirect(reverse("dashboard"))
+        else:
+            # Return an 'invalid login' error message.
+            messages.error(request, "Il y'a eu une erreur d'authentification.")
+            return redirect(reverse("login"))
+    else:
+        context = {}
+        return render(request, 'login.html', context)
+
+@login_required
+def logout_user(request):
+    logout(request)
+    messages.success(request, "Vous avez bien été déconnecté")
+    context = {}
+    return render(request, 'login.html', context)
 
 # La vue dashboard affiche un tableau de bord avec des statistiques sur les machines et les entretiens
+@login_required
 def dashboard(request):
     machine_sum = machines.count()
     entretien_a_faire = entretiens.filter(etat=True)
@@ -38,6 +66,7 @@ def dashboard(request):
 
 
 # La vue infra affiche la liste des infrastructures avec des formulaires pour ajouter et supprimer des éléments
+@login_required
 def infra(request):
     infrastructures = Infrastructure.objects.all()
     addInfraForm = AddInfraForm()
@@ -81,6 +110,7 @@ def infra(request):
 
 
 # La vue machine_detail_view affiche les détails d'une machine spécifique
+@login_required
 def machine_detail_view(request, pk):
     machine_seule = get_object_or_404(Machine, id=pk)
     context = {'machine': machine_seule}
@@ -88,13 +118,14 @@ def machine_detail_view(request, pk):
 
 
 # La vue delete_machine_view supprime une machine spécifique et redirige l'utilisateur vers la page d'infrastructures
+@login_required
 def delete_machine_view(request, pk):
     machine_seule = get_object_or_404(Machine, id=pk)
     machine_seule.delete()
     return redirect(reverse('infra'))
 
 
-
+@login_required
 def taches(request):
     # Récupérer les entretiens à faire qui sont actuellement en cours
     entretien_a_faire = entretiens.filter(etat=True)
@@ -108,11 +139,35 @@ def taches(request):
         machines = Machine.objects.filter(entretien__type=entretien_type['type'])
         machines_entretien.append({'type': entretien_type['type'], 'machines': machines})
 
+    # # Grouper les entretiens à faire par type et compter leur nombre
+    # entretien_par_type = entretien_a_faire.values('type', 'nom', 'description').annotate(count=Count('type'))
+
+    # Récupérer les machines qui nécessitent un entretien par type d'entretien
+    # machines_entretien = []
+    # for entretien_type in entretien_par_type:
+    #     machines = Machine.objects.filter(entretien__type=entretien_type['nom'])
+    #     machines_entretien.append({'type': entretien_type['type'],'nom': entretien_type['nom'], 'description': entretien_type['description'],'machines': machines})
+
+    # print(machines_entretien)
+    # for entretien in machines_entretien:
+    #     print(entretien['machines'])
+
+    # machines_entretien = []
+    # for entretien_type in entretien_par_type:
+    #     machines = Machine.objects.filter(entretien__type=entretien_type['nom'])
+    #     machines_entretien.append({'type': entretien_type['type'],'nom': entretien_type['nom'], 'description': entretien_type['description'],'machines': machines})
+
+    # print(machines_entretien)
+    # for entretien in machines_entretien:
+    #     print(entretien['machines'])
+
     # Initialiser les formulaires pour ajouter et supprimer des entretiens
     addEntretienForm = AddEntretienForm()
     deleteEntretienForm = DeleteEntretienForm()
     submitted_add = False
     submitted_delete = False
+
+    print(machines_entretien)
 
     # Traiter les soumissions de formulaires
     if request.method == 'POST':
@@ -150,7 +205,14 @@ def taches(request):
 
     return render(request, 'admin/taches.html', context)
 
+# La vue entretien_detail_view affiche les détails d'un entretien spécifique
+@login_required
+def entretien_detail_view(request, pk):
+    entretien_seul = get_object_or_404(Entretien, id=pk)
+    context = {'entretien': entretien_seul}
+    return render(request, 'admin/entretien_detail.html', context)
 
+@login_required
 def taches_historique(request):
  
     context = {
@@ -159,3 +221,37 @@ def taches_historique(request):
 
     return render(request, 'admin/taches_histo.html', context)
 
+def is_superadmin(function):
+    actual_decorator = user_passes_test(
+        lambda u: u.is_active and u.is_superuser,
+        login_url='dashboard',
+        redirect_field_name='redirect_field_name'
+    )
+    return actual_decorator(function)
+
+@is_superadmin
+def create_user(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        print(username, password)
+        try:
+            User = get_user_model()
+
+            # Check if the username already exists
+            if User.objects.filter(username=username).exists():
+                messages.error(request, 'Username already exists. Please choose a different username.')
+                return redirect('create-user')
+
+            # Create the user and personnel instances
+            user = User.objects.create_user(username=username, password=password)
+
+            messages.success(request, 'User created successfully.')
+            return redirect('create-user')
+        except Exception as e:
+            messages.error(request, f'Failed to create user. Error: {str(e)}')
+            return redirect('create-user')
+
+
+
+    return render(request, 'create_user.html')

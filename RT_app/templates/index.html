@@ -11,22 +11,210 @@
     {% endblock %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
 </head>
 <body>
-
-    <p>Index</p>
-    <div class="dropdown m-3 z-2">
-        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          Dropdown link
-        </a>
-      
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="#">Action</a></li>
-          <li><a class="dropdown-item" href="#">Another action</a></li>
-          <li><a class="dropdown-item" href="#">Something else here</a></li>
+  <!DOCTYPE html>
+  <html lang="fr">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>RT Development</title>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  </head>
+  <body>
+  
+  {% block menu %}
+  
+  <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
+    <div class="container">
+      <a class="navbar-brand col-2 m-0 p-0" href="{% url 'index' %}">
+        <img class="img-fluid logo" src="{% static 'img/rtdev.png' %}" alt="Logo RT Development">
+      </a>
+  
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"
+        aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Accueil</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Services</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Projets</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">À propos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Contact</a>
+          </li>
+        </ul>
+  
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class=" btn btn-secondary" href="{% url 'login' %}">S'authentifier</a>
+          </li>
         </ul>
       </div>
+    </div>
+  </nav>
+  
+  
+  
+  {% endblock %}
+  
+  {% block content %}
+  
+  <section class="banner">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h1>RT Development</h1>
+          <p>Nous offrons des services de pointe dans le domaine du réseau embarqué pour le spatial.</p>
+          <a href="#" class="btn btn-primary">En savoir plus</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <section class="services">
+    <div class="container">
+      <h2>Nos services</h2>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card">
+            <img src="service1.jpg" class="card-img-top" alt="Service 1">
+            <div class="card-body">
+              <h5 class="card-title">Développement logiciel embarqué</h5>
+              <p class="card-text">Création de logiciels embarqués sur mesure pour les systèmes et équipements utilisés dans le domaine spatial.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card">
+            <img src="service2.jpg" class="card-img-top" alt="Service 2">
+            <div class="card-body">
+              <h5 class="card-title">Test et validation</h5>
+              <p class="card-text">Réalisation de tests rigoureux pour assurer la performance, la robustesse et la sécurité des systèmes embarqués spatiaux.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card">
+            <img src="service3.jpg" class="card-img-top" alt="Service 3">
+            <div class="card-body">
+              <h5 class="card-title">Optimisation des performances</h5>
+              <p class="card-text">Analyse et amélioration des performances des systèmes embarqués pour maximiser leur efficacité et leur fiabilité.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-md-4">
+          <div class="card">
+            <img src="service4.jpg" class="card-img-top" alt="Service 4">
+            <div class="card-body">
+              <h5 class="card-title">Sécurité des communications</h5>
+              <p class="card-text">Mise en place de protocoles de sécurité avancés pour protéger les communications et les données échangées dans les réseaux embarqués spatiaux.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card">
+            <img src="service5.jpg" class="card-img-top" alt="Service 5">
+            <div class="card-body">
+              <h5 class="card-title">Maintenance et support</h5>
+              <p class="card-text">Assistance technique et maintenance continue des systèmes embarqués pour assurer leur bon fonctionnement tout au long de leur cycle de vie.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <section class="projects">
+    <div class="container">
+      <h2>Nos projets</h2>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card">
+            <img src="project1.jpg" class="card-img-top" alt="Projet 1">
+            <div class="card-body">
+              <h5 class="card-title">Systèmes de communication satellitaire</h5>
+              <p class="card-text">Développement et déploiement de systèmes de communication haut débit par satellite pour les missions spatiales.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+            <img src="project2.jpg" class="card-img-top" alt="Projet 2">
+            <div class="card-body">
+              <h5 class="card-title">Contrôle de vol</h5>
+              <p class="card-text">Conception et implémentation de systèmes de contrôle de vol pour les satellites et les engins spatiaux.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-md-6">
+          <div class="card">
+            <img src="project3.jpg" class="card-img-top" alt="Projet 3">
+            <div class="card-body">
+              <h5 class="card-title">Systèmes de navigation spatiale</h5>
+              <p class="card-text">Développement de systèmes de navigation avancés pour assurer la précision et la fiabilité du positionnement des satellites et des véhicules spatiaux.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+            <img src="project4.jpg" class="card-img-top" alt="Projet 4">
+            <div class="card-body">
+              <h5 class="card-title">Systèmes d'observation de la Terre</h5>
+              <p class="card-text">Création de plateformes de surveillance de la Terre basées sur des satellites, fournissant des données précises sur l'environnement, les ressources naturelles, etc.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-md-6">
+          <div class="card">
+            <img src="project5.jpg" class="card-img-top" alt="Projet 5">
+            <div class="card-body">
+              <h5 class="card-title">Réseaux de constellations de satellites</h5>
+              <p class="card-text">Conception et déploiement de réseaux de constellations de satellites interconnectés pour des communications globales continues.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  {% endblock %}
+  
+  {% block footer %}
+  
+  <footer class="footer">
+    <div class="container-fluid bg-light">
+      <div class="py-4 d-flex justify-content-center align-items-center">
+        <span>© 2023 RT Development. Tous droits réservés.</span>
+      </div>
+    </div>
+  </footer>
+  
+  
+  {% endblock %}
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+  </html>
+  
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
 
