@@ -26,8 +26,7 @@
                 {% for machine in entretien_type.machines %}
                 <div class="p-3 col-6">
                     <div class="card-body bg-info-subtle rounded-3">
-                        <div class="card-text w-auto">Queryset: <a href="#">{{ entretien_type.entretien_id }}</a></div>
-                        <div class="card-text w-auto">Machine: <a href="{% url 'entretien-detail' entretien_type.entretien_id %}">{{ machine.nom }}</a></div>
+                        <div class="card-text w-auto ">Machine: <a class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="{% url 'entretien-detail' entretien_type.entretien_id %}">{{ machine.nom }}</a></div>
                         <div class="card-text w-auto">IP: {{machine.ip}}</div>
                     </div>
                 </div>

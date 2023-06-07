@@ -27,6 +27,9 @@
                             <li class="list-group-item"> <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a></li>
                             <li class="list-group-item"> <a class="nav-link" href="{% url 'infra' %}">Infrastructures</a></li>
                             <li class="list-group-item"> <a class="nav-link" href="{% url 'taches' %}">Tâches</a></li>
+                            {% if user.is_superuser %}
+                                <li class="list-group-item"> <a class="nav-link" href="{% url 'create-user' %}">Créer un utilisateur</a></li>
+                            {% endif %}
                         </ul>
                     </div>
                 </div>
@@ -45,8 +48,19 @@
                             </a>
                           
                             <ul class="dropdown-menu">
-                              <li><a class="dropdown-item" href="#">Action</a></li>
-                            </ul>
+                                <li>
+                                  <div class="container">
+                                    <h3 class="text-center">Notifications</h3>
+                                    <p class="text-center">Vous avez les notifications suivantes :</p>
+                                    <ul class="list-group">
+                                      {% for entretien in entretien_a_faire %}
+                                        <li class="list-group-item dropdown-item"><a href="{% url 'entretien-detail' entretien.id %}">{{ entretien.nom }}</a></li>
+                                      {% endfor %}
+                                    </ul>
+                                  </div>
+                                </li>
+                              </ul>
+                              
                         </div>
                           
                         <div class="nav-item">

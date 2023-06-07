@@ -9,6 +9,9 @@
   width: 8rem; 
 }
 
+
+
+
 /* Add the following CSS styles to your stylesheet or within <style></style> tags in the <head> section */
 
 /* Body styles */
@@ -41,7 +44,18 @@ body {
 .banner {
   background-color: #f8f9fa; /* Set the background color */
   padding: 50px 0;
+  background-image: url('../img/index/banner2.gif');
+  background-size: cover;
+  background-position: center;
+  color: white;
 }
+
+@media (max-width: 767px) {
+  .banner {
+    background-size: contain;
+  }
+}
+
 
 .banner h1 {
   font-size: 40px; /* Set the font size */

@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 
 infrastructures = Infrastructure.objects.all()
 entretiens = Entretien.objects.all()
+entretien_a_faire = entretiens.filter(etat=True)
 personnels = Personnel.objects.all()
 machines = Machine.objects.all()
 
@@ -48,12 +49,16 @@ def logout_user(request):
     context = {}
     return redirect(reverse("login"))
 
+
+
 # La vue dashboard affiche un tableau de bord avec des statistiques sur les machines et les entretiens
 @login_required
 def dashboard(request):
     machine_sum = machines.count()
-    entretien_a_faire = entretiens.filter(etat=True)
+    
     entretien_par_type = entretien_a_faire.values('type').annotate(count=Count('type'))
+
+    # superusers = Personnel.objects.filter(is_superuser=True)
 
     context = {
         'infrastructures': infrastructures,
@@ -62,7 +67,7 @@ def dashboard(request):
         'machines': machines,
         'machine_sum': machine_sum,
         'entretien_a_faire': entretien_a_faire,
-        'entretien_par_type': entretien_par_type,
+        'entretien_par_type': entretien_par_type
     }
     return render(request, 'admin/dashboard.html', context)
 
@@ -106,7 +111,8 @@ def infra(request):
         'addMachineForm': addMachineForm,
         'submitted_add': submitted_add,
         'submitted_delete': submitted_delete,
-        'submitted_add_machine': submitted_add_machine
+        'submitted_add_machine': submitted_add_machine,
+        'entretien_a_faire': entretien_a_faire,
     }
     return render(request, 'admin/infra.html', context)
 
@@ -137,10 +143,6 @@ def taches(request):
 
     # Récupérer les machines qui nécessitent un entretien par type d'entretien
     machines_entretien = []
-    # for entretien_type in entretien_par_type:
-    #     machines = Machine.objects.filter(entretien__type=entretien_type['type'])
-    #     machines_entretien.append({'type': entretien_type['type'], 'machines': machines})
-
 
 
     for entretien_type in entretien_par_type:
@@ -152,28 +154,6 @@ def taches(request):
         })
 
 
-
-    # # Grouper les entretiens à faire par type et compter leur nombre
-    # entretien_par_type = entretien_a_faire.values('type', 'nom', 'description').annotate(count=Count('type'))
-
-    # Récupérer les machines qui nécessitent un entretien par type d'entretien
-    # machines_entretien = []
-    # for entretien_type in entretien_par_type:
-    #     machines = Machine.objects.filter(entretien__type=entretien_type['nom'])
-    #     machines_entretien.append({'type': entretien_type['type'],'nom': entretien_type['nom'], 'description': entretien_type['description'],'machines': machines})
-
-    # print(machines_entretien)
-    # for entretien in machines_entretien:
-    #     print(entretien['machines'])
-
-    # machines_entretien = []
-    # for entretien_type in entretien_par_type:
-    #     machines = Machine.objects.filter(entretien__type=entretien_type['nom'])
-    #     machines_entretien.append({'type': entretien_type['type'],'nom': entretien_type['nom'], 'description': entretien_type['description'],'machines': machines})
-
-    # print(machines_entretien)
-    # for entretien in machines_entretien:
-    #     print(entretien['machines'])
 
     # Initialiser les formulaires pour ajouter et supprimer des entretiens
     addEntretienForm = AddEntretienForm()
@@ -223,7 +203,10 @@ def taches(request):
 @login_required
 def entretien_detail_view(request, pk):
     entretien_seul = get_object_or_404(Entretien, id=pk)
-    context = {'entretien': entretien_seul}
+    context = {
+        'entretien': entretien_seul,
+        'entretien_a_faire': entretien_a_faire
+    }
     return render(request, 'admin/entretien_detail.html', context)
 
 @login_required
@@ -231,6 +214,7 @@ def taches_historique(request):
  
     context = {
         'entretiens' : entretiens,
+        'entretien_a_faire': entretien_a_faire
     }
 
     return render(request, 'admin/taches_histo.html', context)
@@ -245,6 +229,7 @@ def is_superadmin(function):
 
 @is_superadmin
 def create_user(request):
+    
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -266,6 +251,8 @@ def create_user(request):
             messages.error(request, f'Failed to create user. Error: {str(e)}')
             return redirect('create-user')
 
+    context = {
+        'entretien_a_faire': entretien_a_faire
+    }
 
-
-    return render(request, 'create_user.html')
+    return render(request, 'create_user.html', context)
