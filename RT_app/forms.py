@@ -2,7 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from .models import Personnel, Infrastructure, Entretien, Machine
 from django.core.validators import RegexValidator
-
+from django.contrib.auth import get_user_model
 
 class AddInfraForm(forms.ModelForm):
     add_infra_form = forms.CharField(widget=forms.HiddenInput(), initial='add_infra_form')
@@ -117,3 +117,27 @@ class AddMachineForm(forms.ModelForm):
             'id_infrastructure': forms.Select(attrs={'class': 'form-control'}),
             'type_machine': forms.Select(attrs={'class': 'form-control'}),
         }
+
+class CreateUserForm(forms.Form):
+    username = forms.CharField(label="Nom d'utilisateur", widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(label="Mot de passe", widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    is_staff = forms.BooleanField(label="Administrateur", required=False)
+
+
+
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        User = get_user_model()
+
+        if User.objects.filter(username=username).exists():
+            raise forms.ValidationError("Ce nom d'utilisateur existe déjà. Merci d'en choisir un autre.")
+
+        return username
+
+    def save(self):
+        username = self.cleaned_data['username']
+        password = self.cleaned_data['password']
+        is_staff = self.cleaned_data['is_staff']
+        User = get_user_model()
+        user = User.objects.create_user(username=username, password=password, is_staff=is_staff)
+        return user

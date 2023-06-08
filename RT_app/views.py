@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from RT_app.models import Machine, Entretien, Personnel, Infrastructure
 from django.db.models import Count
-from .forms import AddInfraForm, DeleteInfraForm, AddEntretienForm, DeleteEntretienForm, AddMachineForm
+from .forms import AddInfraForm, DeleteInfraForm, AddEntretienForm, DeleteEntretienForm, AddMachineForm, CreateUserForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.urls import reverse
@@ -82,6 +82,7 @@ def infra(request):
     submitted_add = False
     submitted_delete = False
     submitted_add_machine = False
+    
 
     if request.method == 'POST':
         if 'add_infra_form' in request.POST:
@@ -229,30 +230,13 @@ def is_superadmin(function):
 
 @is_superadmin
 def create_user(request):
-    
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        print(username, password)
-        try:
-            User = get_user_model()
-
-            # Check if the username already exists
-            if User.objects.filter(username=username).exists():
-                messages.error(request, 'Username already exists. Please choose a different username.')
-                return redirect('create-user')
-
-            # Create the user and personnel instances
-            user = User.objects.create_user(username=username, password=password)
-
-            messages.success(request, 'User created successfully.')
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, "L'utilisateur a bien été créé.")
             return redirect('create-user')
-        except Exception as e:
-            messages.error(request, f'Failed to create user. Error: {str(e)}')
-            return redirect('create-user')
+    else:
+        form = CreateUserForm()
 
-    context = {
-        'entretien_a_faire': entretien_a_faire
-    }
-
-    return render(request, 'create_user.html', context)
+    return render(request, 'create_user.html', {'form': form})

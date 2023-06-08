@@ -6,9 +6,11 @@
     <div class="row row-cols-lg-auto pe-4 align-items-center justify-content-between">
         <h1>Infrastructures</h1>
         <div>
+            {% if user.is_staff %}
             <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#AddInfra" href="#">Ajouter</a>
             <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#DeleteInfra" href="#" >Supprimer</a>
             <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddMachine" href="#">Ajouter une machine</a>
+            {% endif %}
         </div>
     </div>
 
@@ -61,7 +63,7 @@
                         <h3>Nom de l'infrastructure</h3>
                         <form method="post">
                             {% csrf_token %}
-                            {{ addInfraForm.as_p}}
+                            {{ addInfraForm.as_p }}
 
                     </div>
                 </div>
