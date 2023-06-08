@@ -79,7 +79,7 @@ class Entretien(models.Model):
 
     id = models.AutoField(primary_key=True,editable=False)
 
-    nom = models.CharField(max_length=30, default="Mise à jour")
+    nom = models.CharField(max_length=50, default="Mise à jour")
 
     type = models.CharField(max_length=15, choices=TYPE_CHOICES, default='PREVENTIF')
 

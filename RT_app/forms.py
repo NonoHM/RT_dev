@@ -50,14 +50,14 @@ class DeleteInfraForm(forms.ModelForm):
 
 class AddEntretienForm(forms.ModelForm):
     add_entretien_form = forms.CharField(widget=forms.HiddenInput(), initial='add_entretien_form')
-    etat_entretien = forms.BooleanField(widget=forms.HiddenInput(), required=True, initial=True)
+    etat = forms.BooleanField(widget=forms.HiddenInput(), required=True, initial=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
     class Meta:
         model = Entretien
-        fields = [ 'type','nom', 'description', 'date', 'id_personnel','id_machine']
+        fields = [ 'type','nom', 'description', 'date', 'id_personnel','id_machine','etat']
         labels = {
             'date': 'Date de fin',
             'id_personnel': 'Personnel attitré',
@@ -67,7 +67,7 @@ class AddEntretienForm(forms.ModelForm):
             'type': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Type de l\'entretien'}),
             'nom': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom de l\'entretien'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Que faire ?'}),
-            'date': forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'Date limite de l\'entretien'}),
+            'date': forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'Date limite de l\'entretien', 'type': 'date'}),
             'id_personnel': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Personnel responsable de l\'entretien'}),
             'id_machine': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Machine sur laquelle faire la tâche'})
         }
@@ -76,8 +76,8 @@ class DeleteEntretienForm(forms.ModelForm):
     confirm = forms.BooleanField(required=True, initial=False, label='Confirmer')
     delete_entretien_form = forms.CharField(widget=forms.HiddenInput(), initial='delete_entretien_form')
     entretien_choices = [(entretien.id, entretien.get_name()) for entretien in Entretien.objects.all().filter(etat=True)]
-    nom = forms.ChoiceField(choices=entretien_choices, widget=forms.Select(attrs={'class': 'form-control'}), label='Nom de l\'entretien')
-
+    #nom = forms.ChoiceField(choices=entretien_choices, widget=forms.Select(attrs={'class': 'form-control'}), label='Nom de l\'entretien')
+    nom = forms.ModelChoiceField(queryset=Entretien.objects.all().filter(etat=True), required=True, widget=forms.Select(attrs={'class': 'form-control'}))
     class Meta:
         model = Entretien 
         fields = ['nom']
@@ -122,7 +122,7 @@ class CreateUserForm(forms.Form):
     username = forms.CharField(label="Nom d'utilisateur", widget=forms.TextInput(attrs={'class': 'form-control'}))
     password = forms.CharField(label="Mot de passe", widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     is_staff = forms.BooleanField(label="Administrateur", required=False)
-
+    id_infrastructure = forms.ModelChoiceField(queryset=Infrastructure.objects.all(), required=True, widget=forms.Select(attrs={'class': 'form-control'}))
 
 
     def clean_username(self):
@@ -138,6 +138,7 @@ class CreateUserForm(forms.Form):
         username = self.cleaned_data['username']
         password = self.cleaned_data['password']
         is_staff = self.cleaned_data['is_staff']
+        id_infrastructure = self.cleaned_data['id_infrastructure']
         User = get_user_model()
-        user = User.objects.create_user(username=username, password=password, is_staff=is_staff)
+        user = User.objects.create_user(username=username, password=password, is_staff=is_staff, id_infrastructure=id_infrastructure)
         return user

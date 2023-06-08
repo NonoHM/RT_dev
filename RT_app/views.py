@@ -82,7 +82,7 @@ def infra(request):
     submitted_add = False
     submitted_delete = False
     submitted_add_machine = False
-    
+
 
     if request.method == 'POST':
         if 'add_infra_form' in request.POST:
@@ -145,16 +145,17 @@ def taches(request):
     # Récupérer les machines qui nécessitent un entretien par type d'entretien
     machines_entretien = []
 
-
+    print(entretien_par_type)
     for entretien_type in entretien_par_type:
-        machines = Machine.objects.filter(entretien__type=entretien_type['type'])
+        machines = Machine.objects.filter(entretien__type=entretien_type['type'], entretien__etat=True)
+    
         machines_entretien.append({
             'type': entretien_type['type'],
             'machines': machines,
             'entretien_id': [machine.get_entretien_ids() for machine in machines][0][0]
         })
-
-
+        
+    print(entretien_a_faire.filter)
 
     # Initialiser les formulaires pour ajouter et supprimer des entretiens
     addEntretienForm = AddEntretienForm()
@@ -179,7 +180,7 @@ def taches(request):
             deleteEntretienForm = DeleteEntretienForm(request.POST)
             if deleteEntretienForm.is_valid():
                 nom_entretien_id = deleteEntretienForm.cleaned_data['nom']
-                nom_entretien = Entretien.objects.get(pk=nom_entretien_id)
+                nom_entretien = Entretien.objects.get(pk=nom_entretien_id.id)
                 nom_entretien.etat = False 
                 nom_entretien.save() 
                 submitted_delete = True
